@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -51,7 +53,7 @@ public class App {
                 searchMoreThanValue(array);
                 break;
             case "7":
-                searchEqualValue(array);
+                binarySearch(array);
                 break;
             case "0":
                 // Thoát chương trình
@@ -121,7 +123,6 @@ public class App {
             String[] arr = content.trim().split(" ");
             System.out.printf("Input array: ");
             for (int i = 0; i < arr.length; i++) {
-                array.add(Double.parseDouble(arr[i]));
                 System.out.printf("%.0f ", Double.parseDouble(arr[i]));
             }
             System.out.println();
@@ -131,69 +132,87 @@ public class App {
     }
 
     // Chức năng 3: Bubble sort
-    public static void bubbleSort(ArrayList<Double> arr) {
-        int n = arr.size(); // Sử dụng method size() để lấy số lượng phần tử trong ArrayList
+    public static void bubbleSort(List<Double> arr) {
+        List<Double> arrayC = new ArrayList<Double>();
+        // Copy mảng arr sang mảng arrayC
+        for (int i = 0; i < arr.size(); i++) {
+            arrayC.add(arr.get(i));
+        }
+
+        int n = arrayC.size(); // Sử dụng method size() để lấy số lượng phần tử trong ArrayList
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
-                if (arr.get(j) > arr.get(j + 1)) { // Sử dụng method get() để lấy giá trị từ ArrayList
-                    double temp = arr.get(j);
-                    arr.set(j, arr.get(j + 1)); // Sử dụng method set() để gán giá trị cho ArrayList
-                    arr.set(j + 1, temp);
+                if (arrayC.get(j) > arrayC.get(j + 1)) { // Sử dụng method get() để lấy giá trị từ ArrayList
+                    double temp = arrayC.get(j);
+                    arrayC.set(j, arrayC.get(j + 1)); // Sử dụng method set() để gán giá trị cho ArrayList
+                    arrayC.set(j + 1, temp);
                 }
             }
-            printArray(arr);
+            printArray(arrayC);
         }
 
         // Sau khi sắp xếp xong, ghi kết quả vào file Output1.txt
         String output = "";
         for (int i = 0; i < arr.size(); i++) {
-            output += arr.get(i) + " ";
+            output += arrayC.get(i) + " ";
         }
         TextFileService.writeFile("file/Output1.txt", output);
     }
 
     // Chức năng 4: Selection sort
-    public static void selectionSort(ArrayList<Double> arr) {
-        int n = arr.size();
+    public static void selectionSort(List<Double> arr) {
+        List<Double> arrayC = new ArrayList<Double>();
+        // Copy mảng arr sang mảng arrayC
+        for (int i = 0; i < arr.size(); i++) {
+            arrayC.add(arr.get(i));
+        }
+
+        int n = arrayC.size();
         for (int i = 0; i < n - 1; i++) {
             int minIndex = i;
             for (int j = i + 1; j < n; j++) {
-                if (arr.get(j) < arr.get(minIndex)) {
+                if (arrayC.get(j) < arrayC.get(minIndex)) {
                     minIndex = j;
                 }
             }
-            double temp = arr.get(minIndex);
-            arr.set(minIndex, arr.get(i));
-            arr.set(i, temp);
-            printArray(arr);
+            double temp = arrayC.get(minIndex);
+            arrayC.set(minIndex, arrayC.get(i));
+            arrayC.set(i, temp);
+            printArray(arrayC);
         }
 
         // Sau khi sắp xếp xong, ghi kết quả vào file Output2.txt
         String output = "";
-        for (int i = 0; i < arr.size(); i++) {
-            output += arr.get(i) + " ";
+        for (int i = 0; i < arrayC.size(); i++) {
+            output += arrayC.get(i) + " ";
         }
         TextFileService.writeFile("file/Output2.txt", output);
     }
 
     // Chức năng 5: Insertion sort
     public static void insertionSort(ArrayList<Double> arr) {
-        int n = arr.size();
+        List<Double> arrayC = new ArrayList<Double>();
+        // Copy mảng arr sang mảng arrayC
+        for (int i = 0; i < arr.size(); i++) {
+            arrayC.add(arr.get(i));
+        }
+
+        int n = arrayC.size();
         for (int i = 1; i < n; i++) {
-            double key = arr.get(i);
+            double key = arrayC.get(i);
             int j = i - 1;
-            while (j >= 0 && arr.get(j) > key) {
-                arr.set(j + 1, arr.get(j));
+            while (j >= 0 && arrayC.get(j) > key) {
+                arrayC.set(j + 1, arrayC.get(j));
                 j--;
             }
-            arr.set(j + 1, key);
-            printArray(arr);
+            arrayC.set(j + 1, key);
+            printArray(arrayC);
         }
 
         // Sau khi sắp xếp xong, ghi kết quả vào file Output3.txt
         String output = "";
-        for (int i = 0; i < arr.size(); i++) {
-            output += arr.get(i) + " ";
+        for (int i = 0; i < arrayC.size(); i++) {
+            output += arrayC.get(i) + " ";
         }
         TextFileService.writeFile("file/Output3.txt", output);
     }
@@ -215,24 +234,32 @@ public class App {
         System.out.println();
     }
 
-    // Chức năng 7: Search = value
-    public static void searchEqualValue(ArrayList<Double> arr) {
+    // Chức năng 7: Tìm kiếm nhị phân
+    public static void binarySearch(ArrayList<Double> arr) {
+        // Sắp xếp mảng trước khi tìm kiếm
+        Collections.sort(arr);
+        System.out.println("Sorted array: " + arr);
+
         double value = Double.parseDouble(inputFunction(scanner, "Please enter searched input value: "));
-        int count = 0;
         System.out.printf("The right position: ");
-        for (int i = 0; i < arr.size(); i++) {
-            if (arr.get(i) == value) {
-                System.out.printf("%.0f ", arr.get(i));
-                count++;
+
+        int left = 0;
+        int right = arr.size() - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (arr.get(mid) == value) {
+                System.out.printf("%d\n", mid + 1);
+                break;
+            } else if (arr.get(mid) < value) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
             }
         }
-        if (count == 0) {
-            System.out.println("No value found!");
-        }
-        System.out.println();
+
     }
 
-    public static void printArray(ArrayList<Double> arr) {
+    public static void printArray(List<Double> arr) {
         for (int i = 0; i < arr.size(); i++) {
             System.out.print(arr.get(i) + " ");
         }
